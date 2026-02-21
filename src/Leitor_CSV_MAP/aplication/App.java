@@ -1,4 +1,4 @@
-package aplication;
+package Pratica1.aplication;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
