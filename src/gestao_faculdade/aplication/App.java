@@ -18,17 +18,18 @@ public class App {
         System.err.println();
         System.out.println("Cadastrar aluno [1]");
         System.out.println("Cadastrar professor [2]");
-        System.out.println("Criar disciplina [3]");
-        System.out.println("Criar turma [4]");
-        System.out.println("Matricular aluno [5]");
-        System.out.println("Lanças notas [6]");
-        System.out.println("Registrar frequência [7]");
-        System.out.println("Exibir boletim de aluno [8]");
-        System.out.println("Exibir ranking da turma [9]");
-        System.out.println("Gerar relatório CSV [10]");
-        System.out.println("Ler relatório CSV [11]");
-        System.out.println("Estatístiscas gerais [12]");
-        System.out.println("Sair [13]");
+        System.out.println("Cadastrar disciplina [3]");
+        System.out.println("Cadastrar pré-requisitos de disciplinas [4]");
+        System.out.println("Cadastrar turma [5]");
+        System.out.println("Matricular aluno [6]");
+        System.out.println("Lanças notas [7]");
+        System.out.println("Registrar frequência [8]");
+        System.out.println("Exibir boletim de aluno [9]");
+        System.out.println("Exibir ranking da turma [10]");
+        System.out.println("Gerar relatório CSV [11]");
+        System.out.println("Ler relatório CSV [12]");
+        System.out.println("Estatístiscas gerais [13]");
+        System.out.println("Sair [14]");
         System.err.println();
         System.out.print("Selecione a função desejada! ");
         Integer respostaMenu = sc.nextInt();
@@ -45,6 +46,10 @@ public class App {
             
             case 3:
                 cadastraDisciplina(sc);
+                break;
+
+            case 4:
+                cadastraRequisitosDisciplina(sc);
                 break;
 
             default:
@@ -112,7 +117,7 @@ public class App {
         System.out.print("Professor cadastrado com sucesso! ");
     }
 
-    public static void cadastraDisciplina(Scanner sc) {
+    public static Disciplina cadastraDisciplina(Scanner sc) {
 
         System.out.print("Digite o nome da disciplina: ");
         String nome = sc.nextLine();
@@ -129,94 +134,65 @@ public class App {
         Integer creditos = sc.nextInt();
         sc.nextLine();
 
-        Disciplina disciplina = new Disciplina(codigo, nome, cargaHoraria, creditos);
-        disciplinas.put(codigo, disciplina);
-
-        System.out.print("Essa disciplina possui pré-requisitos? [1] Sim | [0] Não: ");
+        System.out.print("Deseja recomeçar o cadastro? [1] Não | [0] Sim: ");
         Integer resposta = sc.nextInt();
         sc.nextLine();
 
-        if (resposta == 1) {
-
-            System.out.print("Quantos pré-requisitos? ");
-            Integer quantidade = sc.nextInt();
-            sc.nextLine();
-
-            for (int i = 0; i < quantidade; i++) {
-
-                System.out.print("Digite o código do pré-requisito: ");
-                Integer codigoPreRequisito = sc.nextInt();
-                sc.nextLine();
-
-                Disciplina preRequisito = disciplinas.get(codigoPreRequisito);
-
-                if (preRequisito == null) {
-
-                    System.out.println("Disciplina não encontrada.");
-                    System.out.print("Deseja cadastrar agora? [1] Sim | [0] Não: ");
-                    int opcao = sc.nextInt();
-                    sc.nextLine();
-
-                    if (opcao == 1) {
-                        preRequisito = criarNovaDisciplina(sc, codigoPreRequisito);
-                        disciplinas.put(codigoPreRequisito, preRequisito);
-
-                        disciplina.adicionarPreRequisito(preRequisito);
-                        System.out.println("Pré-requisito (nova disciplina) adicionado à disciplina antiga!");
-                    }
-                }
-
-                if (preRequisito != null) {
-                    disciplina.adicionarPreRequisito(preRequisito);
-                    System.out.println("Pré-requisito adicionado!");
-                }
-            }
+        if(resposta == 1){
+            Disciplina disciplina = new Disciplina(codigo, nome, cargaHoraria, creditos);
+            disciplinas.put(codigo, disciplina);
+            System.out.print("Disciplina cadastrada com sucesso! ");
+            return disciplina;
         }
-
-        System.out.print("Essa disciplina é pré-requisito de alguma disciplina já cadastrada? [1] Sim | [0] Não: ");
-        Integer respostaDependente = sc.nextInt();
-        sc.nextLine();
-
-        if (respostaDependente == 1) {
-            System.out.print("Quantas disciplinas dependem desta? ");
-            Integer quantidadeDependentes = sc.nextInt();
-            sc.nextLine();
-
-            for (int i = 0; i < quantidadeDependentes; i++) {
-                System.out.print("Digite o código da disciplina que depende desta: ");
-                Integer codigoDependente = sc.nextInt();
-                sc.nextLine();
-
-                Disciplina dependente = disciplinas.get(codigoDependente);
-
-                if (dependente != null) {
-                    dependente.adicionarPreRequisito(disciplina);
-                    System.out.println("Disciplina criada adicionada como pré-requisito da disciplina existente!");
-                } else {
-                    System.out.println("Disciplina dependente não encontrada.");
-                }
-            }
+        else{
+            return cadastraDisciplina(sc);
         }
-
-        System.out.println("Disciplina cadastrada com sucesso!");
     }
 
-    public static Disciplina criarNovaDisciplina(Scanner sc, Integer codigo) {
+    public static void cadastraRequisitosDisciplina (Scanner sc) {
 
-        System.out.print("Digite o nome da disciplina: ");
-        String nome = sc.nextLine();
-
-        System.out.print("Digite a carga horária: ");
-        Integer cargaHoraria = sc.nextInt();
+        System.out.print("Digite o código da disciplina que possui requisitos: ");
+        Integer codigo = sc.nextInt();
         sc.nextLine();
 
-        System.out.print("Digite os créditos: ");
-        Integer creditos = sc.nextInt();
+        Disciplina disciplina = disciplinas.get(codigo);
+
+        System.out.print("Quantos pré-requisitos? ");
+        Integer quantidade = sc.nextInt();
         sc.nextLine();
 
-        return new Disciplina(codigo, nome, cargaHoraria, creditos);
+        for (int i = 0; i < quantidade; i++) {
+
+            System.out.print("Digite o código do pré-requisito: ");
+            Integer codigoPreRequisito = sc.nextInt();
+            sc.nextLine();
+
+            Disciplina preRequisito = disciplinas.get(codigoPreRequisito);
+
+            if (preRequisito == null) {
+
+                System.out.println("Disciplina não encontrada.");
+                System.out.print("Deseja cadastrar agora? [1] Sim | [0] Não: ");
+                int opcao = sc.nextInt();
+                sc.nextLine();
+
+                if (opcao == 1) {
+                    preRequisito = cadastraDisciplina(sc);
+                    disciplinas.put(preRequisito.getCodigo(), preRequisito);
+
+                    disciplina.adicionarPreRequisito(preRequisito);
+                    System.out.println("Pré-requisito (nova disciplina) adicionado à disciplina antiga!");
+                }
+            }
+
+            if (preRequisito != null) {
+                disciplina.adicionarPreRequisito(preRequisito);
+                System.out.println("Pré-requisito adicionado!");
+            }
+        }
     }
 }
+
 
     
 
