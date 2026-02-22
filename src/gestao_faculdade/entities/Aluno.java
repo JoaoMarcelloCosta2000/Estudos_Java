@@ -1,5 +1,6 @@
 package gestao_faculdade.entities;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +23,10 @@ public class Aluno extends Pessoa {
 
     public Integer getMatricula() {
         return matricula;
+    }
+
+    public Set<Matricula> getMatriculas() {
+        return Collections.unmodifiableSet(matriculas);
     }
 
     @Override

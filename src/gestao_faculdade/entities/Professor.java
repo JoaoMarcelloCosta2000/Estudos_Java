@@ -12,8 +12,12 @@ public class Professor extends Pessoa {
         this.salarioBase = salarioBase;
     }
 
-    public void insereTurma (Integer matricula, Turma turma){
-        this.turmasMinistradas.put(matricula, turma);
+    public HashMap<Integer, Turma> getTurmasMinistradas() {
+        return turmasMinistradas;
+    }
+
+    public void insereTurma (Integer codigoTurma, Turma turma){
+        this.turmasMinistradas.put(codigoTurma, turma);
     }
     
 }

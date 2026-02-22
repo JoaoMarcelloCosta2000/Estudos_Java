@@ -21,6 +21,10 @@ public class Disciplina implements Comparable <Disciplina> {
         return nome;
     }
 
+    public HashSet<Disciplina> getPreRequisitos() {
+        return preRequisitos;
+    }
+
     public void setPreRequisitos(HashSet<Disciplina> preRequisitos) {
         this.preRequisitos = preRequisitos;
     }

@@ -1,6 +1,8 @@
 package gestao_faculdade.aplication;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 import gestao_faculdade.entities.Aluno;
@@ -69,6 +71,14 @@ public class App {
 
                 case 6:
                     matriculaAluno(sc);
+                    break;
+
+                case 7:
+                    lancaNota(sc);
+                    break;    
+
+                case 8:
+                    registrarFrequencia(sc);
                     break;
 
                 default:
@@ -305,7 +315,6 @@ public class App {
             disciplinaSelecionada = disciplinas.get(codigoDisciplina);
 
             if (disciplinaSelecionada != null) {
-                System.out.println("Disciplina " + disciplinaSelecionada.getNome() + " associada com sucesso!");
                 break;
             } else {
                 System.out.println("Código de disciplina não encontrado. Insira um código válido!");
@@ -327,7 +336,6 @@ public class App {
             }
 
             if (professorEncontrado != null) {
-                System.out.println("Professor " + professorEncontrado.getNome() + " associado com sucesso!");
                 break;
             } else {
                 System.out.println("Código de professor não encontrado. Digite um código válido!");
@@ -417,8 +425,193 @@ public class App {
         System.out.print("Matrícula do aluno " + alunoEncontrado.getNome() + " na turma de código " + turmaEncontrada.getCodigo() + " realizada com sucesso! ");
 
     }
-}
 
+    public static void lancaNota(Scanner sc){
+
+        System.out.println("Bem vindo ao sistema de lançamento de notas!");
+
+        System.out.print("Informe o ID do professor: ");
+        Integer idProfessor = sc.nextInt();
+        sc.nextLine();
+
+        Professor professor = professores.get(idProfessor);
+
+        if(professor == null){
+            System.out.println("Professor não encontrado!");
+            return;
+        }
+
+        System.out.print("Digite a matrícula do aluno: ");
+        Integer numeroMatricula = sc.nextInt();
+        sc.nextLine();
+
+        Aluno aluno = alunos.get(numeroMatricula);
+
+        if(aluno == null){
+            System.out.println("Aluno não encontrado!");
+            return;
+        }
+
+        System.out.print("Digite o código da turma: ");
+        Integer codigoTurma = sc.nextInt();
+        sc.nextLine();
+
+        Turma turma = professor.getTurmasMinistradas().get(codigoTurma);
+
+        if(turma == null){
+            System.out.println("Você não ministra essa turma!");
+            return;
+        }
+
+        Matricula matriculaEncontrada = null;
+
+        for(Matricula matricula : aluno.getMatriculas()){
+            if(matricula.getTurma().getCodigo().equals(codigoTurma)){ 
+                matriculaEncontrada = matricula;
+                break;
+            }
+        }
+
+        if(matriculaEncontrada == null){
+            System.out.println("Aluno não está nessa turma!");
+            return;
+        }
+
+        System.out.println("Quais notas você deseja lançar?");
+        System.out.println("[1] P1");
+        System.out.println("[2] P2");
+        System.out.print("[3] P1 e P2: ");
+
+        Integer opcao = sc.nextInt();
+        sc.nextLine();
+
+        Float n1 = null;
+        Float n2 = null;
+
+        switch(opcao){
+            case 1:
+                System.out.print("Nota P1: ");
+                n1 = sc.nextFloat();
+                matriculaEncontrada.setNota1(n1);
+                break;
+
+            case 2:
+                System.out.print("Nota P2: ");
+                n2 = sc.nextFloat();
+                matriculaEncontrada.setNota2(n2);
+                break;
+
+            case 3:
+                System.out.print("Nota P1: ");
+                n1 = sc.nextFloat();
+
+                System.out.print("Nota P2: ");
+                n2 = sc.nextFloat();
+
+                matriculaEncontrada.setNota1(n1);
+                matriculaEncontrada.setNota2(n2);
+                break;
+        }
+
+        System.out.println("Nome do aluno: " +aluno.getNome());
+        System.out.println("Código da turma: "+matriculaEncontrada.getTurma().getCodigo()); 
+        System.out.println("Notas inseridas: "); 
+        System.out.println("P1: " +n1); 
+        System.out.println("P2: " +n2); 
+
+        System.out.print("Deseja recomeçar o cadastro? [1] Não | [0] Sim: "); 
+        Integer resposta = sc.nextInt(); 
+        sc.nextLine(); 
+        System.out.println(); 
+
+        if(resposta == 0){ 
+            lancaNota(sc); 
+        }
+
+        System.out.println("Notas lançadas com sucesso para o aluno " + aluno.getNome());
+    }
+
+    public static void registrarFrequencia(Scanner sc){
+
+        System.out.println("Bem vindo ao sistema de lançamento de frequeências!");
+
+        System.out.print("Informe o ID do professor: ");
+        Integer idProfessor = sc.nextInt();
+        sc.nextLine();
+
+        Professor professor = professores.get(idProfessor);
+
+        if(professor == null){
+            System.out.println("Professor não encontrado!");
+            return;
+        }
+
+        if(professor.getTurmasMinistradas().isEmpty()){
+            System.out.println("Professor não possui turmas.");
+            return;
+        }
+
+        List<Turma> listaTurmas = new ArrayList<>();
+
+        for (Turma turma : professor.getTurmasMinistradas().values()) {
+            listaTurmas.add(turma);
+        }
+
+        System.out.println("\nTurmas:");
+
+        int contador = 1;
+        for(Turma turma : listaTurmas){
+            System.out.println("[" + contador + "] " + turma.getDisciplina().getNome());
+            contador++;
+        }
+
+        System.out.print("Escolha a turma: ");
+        int escolhaTurma = sc.nextInt();
+        sc.nextLine();
+
+        if(escolhaTurma < 1 || escolhaTurma > listaTurmas.size()){
+            System.out.println("Opção inválida.");
+            return;
+        }
+
+        Turma turmaSelecionada = listaTurmas.get(escolhaTurma - 1);
+
+        if(turmaSelecionada.getMatriculas().isEmpty()){
+            System.out.println("Nenhum aluno na turma.");
+            return;
+        }
+
+        List<Matricula> listaMatriculas = new ArrayList<>(turmaSelecionada.getMatriculas());
+
+        System.out.println("\nAlunos:");
+
+        contador = 1;
+        for(Matricula matricula : listaMatriculas){
+            System.out.println("[" + contador + "] " + matricula.getAluno().getNome());
+            contador++;
+        }
+
+        System.out.print("Escolha o aluno: ");
+        int escolhaAluno = sc.nextInt();
+        sc.nextLine();
+
+        if(escolhaAluno < 1 || escolhaAluno > listaMatriculas.size()){
+            System.out.println("Opção inválida.");
+            return;
+        }
+
+        Matricula matriculaSelecionada = listaMatriculas.get(escolhaAluno - 1);
+
+        System.out.print("Aluno está presente? (1 = Sim / 0 = Não): ");
+        int presente = sc.nextInt();
+
+        matriculaSelecionada.registrarPresenca(presente == 1);
+
+        System.out.println("Frequência registrada com sucesso!");
+        System.out.println("Percentual atual: " 
+            + matriculaSelecionada.getPercentualFrequencia() + "%");
+    }
+}
 
 
     

@@ -27,6 +27,14 @@ public class Turma {
         return codigo;
     }
 
+    public Set<Matricula> getMatriculas() {
+        return matriculas;
+    }
+
+    public Disciplina getDisciplina() {
+        return disciplina;
+    }
+
     public void adicionarMatricula(Matricula matricula) {
         if (matriculas.size() >= limiteDeVagas) {
             throw new IllegalStateException("Turma lotada!");
