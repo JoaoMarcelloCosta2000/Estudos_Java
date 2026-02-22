@@ -1,11 +1,12 @@
 package gestao_faculdade.entities;
 
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Aluno extends Pessoa {
     
     private Integer matricula;
-    private HashMap <Disciplina, Matricula> disciplinaMatricula = new HashMap<>();
+    private Set<Matricula> matriculas = new HashSet<>();
     private Float mediaGeral;
     private Integer totalCreditos;
 
@@ -13,6 +14,14 @@ public class Aluno extends Pessoa {
         super(id, nome, email);
         this.matricula = matricula;
 
+    }
+
+    public void adicionarMatricula(Matricula matricula) {
+        matriculas.add(matricula);
+    }
+
+    public Integer getMatricula() {
+        return matricula;
     }
 
     @Override

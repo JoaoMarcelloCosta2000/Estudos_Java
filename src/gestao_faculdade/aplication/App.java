@@ -1,19 +1,20 @@
 package gestao_faculdade.aplication;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Scanner;
 
 import gestao_faculdade.entities.Aluno;
 import gestao_faculdade.entities.Disciplina;
+import gestao_faculdade.entities.Matricula;
 import gestao_faculdade.entities.Professor;
 import gestao_faculdade.entities.Turma;
+import gestao_faculdade.enums.StatusMatricula;
 
 public class App {
     
     private static HashMap<Integer, Disciplina> disciplinas = new HashMap<>(); // Map de todas as disciplinas cadastradas
-    private static HashSet<Professor> professores = new HashSet<>(); // Set de todos os professores cadastrados
-    private static HashSet<Aluno> alunos = new HashSet<>(); // Set de todos os alunos cadastrados
+    private static HashMap<Integer, Professor> professores = new HashMap<>(); // Map de todos os professores cadastrados
+    private static HashMap<Integer, Aluno> alunos = new HashMap<>(); // Map de todos os alunos cadastrados
     private static HashMap<Integer, Turma> turmas = new HashMap<>(); // Map de todas as turmas cadastradas
 
     public static void main(String[] args) {
@@ -23,7 +24,7 @@ public class App {
         Integer respostaContinuacao = 0;
 
         while (respostaContinuacao == 0) {
-            System.out.println("Olá, bem vindo ao cadastro de pessoas!");
+            System.out.println("Olá, bem vindo ao sistema de gestão da faculdade!");
             System.err.println();
             System.out.println("Cadastrar aluno [1]");
             System.out.println("Cadastrar professor [2]");
@@ -64,6 +65,10 @@ public class App {
                 
                 case 5:
                     cadastraTurma(sc);
+                    break;
+
+                case 6:
+                    matriculaAluno(sc);
                     break;
 
                 default:
@@ -118,7 +123,7 @@ public class App {
 
         if(resposta == 1){
             Aluno aluno = new Aluno(id, nome, email, matricula);
-            alunos.add(aluno);
+            alunos.put(matricula, aluno);
         }
         else{
             cadastraAluno(sc);
@@ -161,7 +166,7 @@ public class App {
 
         if(resposta == 1){
             Professor professor = new Professor(id, nome, email, valorSalario);
-            professores.add(professor);
+            professores.put(id, professor);
         }
         else{
             cadastraProfessor(sc);
@@ -310,21 +315,22 @@ public class App {
         Professor professorEncontrado = null;
 
         while (true) {
-            System.out.print("Digite o nome do professor responsável pela disciplina: ");
-            String nomeDigitado = sc.nextLine();
+            System.out.print("Digite o ID do professor responsável pela disciplina: ");
+            Integer codigoDigitado = sc.nextInt();
+            sc.nextLine();
 
-            for (Professor professor : professores) {
-                if (professor.getNome().equalsIgnoreCase(nomeDigitado)) {
+            for (Professor professor : professores.values()) {
+                if (professor.getId() == codigoDigitado) {
                     professorEncontrado = professor;
                     break;
                 }
             }
 
             if (professorEncontrado != null) {
-                System.out.println("Professor " + nomeDigitado + " associado com sucesso!");
+                System.out.println("Professor " + professorEncontrado.getNome() + " associado com sucesso!");
                 break;
             } else {
-                System.out.println("Nome do professor não encontrado. Digite um nome válido!");
+                System.out.println("Código de professor não encontrado. Digite um código válido!");
             }
         }
 
@@ -348,12 +354,68 @@ public class App {
         if(resposta == 1){
             Turma turma = new Turma(codigo, disciplinaSelecionada, professorEncontrado, limiteDeVagas);
             turmas.put(codigo, turma);
+            professorEncontrado.insereTurma(codigo, turma);
         }
         else{
             cadastraTurma(sc);
         }
         
         System.out.print("Turma cadastrada com sucesso! ");
+    }
+
+    public static void matriculaAluno(Scanner sc){
+
+        System.out.print("Bem vindo ao sistema de matrículas de alunos!");
+        System.out.println();
+
+        Aluno alunoEncontrado = null;
+
+        while (alunoEncontrado == null) {
+            System.out.print("Digite a matrícula do aluno desejado: ");
+            Integer matricula = sc.nextInt();
+            sc.nextLine();
+
+            alunoEncontrado = alunos.get(matricula);
+
+            if (alunoEncontrado == null) {
+                System.out.println("Matrícula não encontrada! Digite uma matrícula válida.");
+            }
+        }
+
+        Turma turmaEncontrada = null;
+
+        while (turmaEncontrada == null) {
+            System.out.print("Digite o código da turma: ");
+            Integer codigoTurma = sc.nextInt();
+            sc.nextLine();
+
+            turmaEncontrada = turmas.get(codigoTurma);
+
+            if (turmaEncontrada == null) {
+                System.out.println("Turma não encontrada! Digite um código válido.");
+            }
+        }
+
+        System.out.println();
+        System.out.println("Dados da matrícula cadastrada:");
+        System.out.println("Nome: " + alunoEncontrado.getNome());
+        System.out.println("Código da turma: " + turmaEncontrada.getCodigo());
+        System.out.println();
+
+        System.out.print("Deseja recomeçar o cadastro? [1] Não | [0] Sim: ");
+        Integer resposta = sc.nextInt();
+        sc.nextLine();
+        System.out.println();
+
+        if(resposta == 1){
+            new Matricula(alunoEncontrado, turmaEncontrada, StatusMatricula.CURSANDO);
+        }
+        else{
+            matriculaAluno(sc);
+        }
+        
+        System.out.print("Matrícula do aluno " + alunoEncontrado.getNome() + " na turma de código " + turmaEncontrada.getCodigo() + " realizada com sucesso! ");
+
     }
 }
 

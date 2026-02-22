@@ -1,13 +1,14 @@
 package gestao_faculdade.entities;
 
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Turma {
     
     private Integer codigo;
     private Disciplina disciplina;
     private Professor professor;
-    private HashMap <Aluno,Matricula> alunos = new HashMap<>();
+    private Set<Matricula> matriculas = new HashSet<>();
     private Integer limiteDeVagas;
 
     public Turma(Integer codigo, Disciplina disciplina, Professor professor, Integer limiteDeVagas) {
@@ -17,10 +18,25 @@ public class Turma {
         this.limiteDeVagas = limiteDeVagas;
     }
 
+    public boolean alunoJaMatriculado(Aluno aluno) {
+        return matriculas.stream()
+                .anyMatch(m -> m.getAluno().equals(aluno));
+    }
 
+    public Integer getCodigo() {
+        return codigo;
+    }
 
-    public void adicionarAluno(Aluno aluno, Matricula matricula) {
-        alunos.put(aluno, matricula);
+    public void adicionarMatricula(Matricula matricula) {
+        if (matriculas.size() >= limiteDeVagas) {
+            throw new IllegalStateException("Turma lotada!");
+        }
+
+        if (alunoJaMatriculado(matricula.getAluno())) {
+            throw new IllegalStateException("Aluno já matriculado nesta turma!");
+        }
+
+        matriculas.add(matricula);
     }
 
 }
