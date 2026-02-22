@@ -11,5 +11,7 @@ public class Professor extends Pessoa {
         super(id, nome, email);
         this.salarioBase = salarioBase;
     }
+
+    
     
 }

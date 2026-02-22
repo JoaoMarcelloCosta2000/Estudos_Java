@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class Aluno extends Pessoa {
     
     private Integer matricula;
-    private HashMap <Disciplina, Matricula> disciplinaMatricula;
+    private HashMap <Disciplina, Matricula> disciplinaMatricula = new HashMap<>();
     private Float mediaGeral;
     private Integer totalCreditos;
 
