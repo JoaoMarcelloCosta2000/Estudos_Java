@@ -51,4 +51,8 @@ public class Turma {
         matriculas.add(matricula);
     }
 
+    public Professor getProfessor() {
+        return professor;
+    }
+
 }

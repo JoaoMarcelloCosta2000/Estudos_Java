@@ -10,6 +10,7 @@ public class Matricula {
     private Float nota2;
     private Integer totalAulas = 0;
     private Integer totalPresencas = 0;
+    private Float mediaDisciplina;
     private StatusMatricula status;
 
     public Matricula(Aluno aluno, Turma turma, StatusMatricula status) {
@@ -39,6 +40,32 @@ public class Matricula {
         return (totalPresencas * 100f) / totalAulas;
     }
 
+    public Float getMediaDisciplina() {
+        return mediaDisciplina;
+    }
+
+    public void setMediaDisciplina(Float nota1, Float nota2) {
+        this.mediaDisciplina = (nota1 + nota2) /2;
+    }
+
+    public StatusMatricula getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusMatricula status) {
+
+        if (mediaDisciplina == null) return;
+
+        if(mediaDisciplina > 6.0){
+            this.status = StatusMatricula.APROVADO;
+        }else{
+            this.status = StatusMatricula.REPROVADO_NOTA;
+        }
+        if(getPercentualFrequencia() < 70){
+            this.status = StatusMatricula.REPROVADO_FREQUENCIA;
+        }
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -58,6 +85,14 @@ public class Matricula {
 
     public Turma getTurma() {
         return turma;
+    }
+
+    public Float getNota1() {
+        return nota1;
+    }
+
+    public Float getNota2() {
+        return nota2;
     }
 
     @Override

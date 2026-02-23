@@ -81,6 +81,10 @@ public class App {
                     registrarFrequencia(sc);
                     break;
 
+                case 9:
+                    exibirBoletimAluno(sc);
+                    break;
+
                 default:
                     System.out.println("Opção inválida! Digite uma opção válida!");
             }
@@ -555,6 +559,7 @@ public class App {
 
             if(resposta == 1){ 
                 System.out.println("Notas lançadas com sucesso para o aluno " +aluno.getNome());
+                matriculaEncontrada.setMediaDisciplina(n1, n2);
                 break;
             }
         }
@@ -638,6 +643,38 @@ public class App {
 
         System.out.println("Frequência registrada com sucesso!");
         System.out.println("Percentual atual: " +matriculaSelecionada.getPercentualFrequencia() + " %");
+    }
+
+    public static void exibirBoletimAluno(Scanner sc){
+
+        System.out.println("Bem vindo ao sistema de exibição de boletim!");
+
+        System.out.print("Informe a matrícula do aluno: ");
+        Integer matriculaInformada = sc.nextInt();
+        sc.nextLine();
+
+        Aluno alunoAchado = alunos.get(matriculaInformada);
+
+        if(alunoAchado == null){
+            System.out.println("Matrícula não encontrada.");
+            return;
+        }
+
+        System.out.println("Boletim do aluno "+alunoAchado.getNome()+" !");
+
+        for (Matricula matricula : alunoAchado.getMatriculas()) {
+            System.out.println(
+                "Código turma: " + matricula.getTurma().getCodigo() +
+                " | Disciplina: " + matricula.getTurma().getDisciplina() +
+                " | Professor: " + matricula.getTurma().getProfessor() +
+                " | Nota P1: " + matricula.getNota1() +
+                " | Nota P2: " + matricula.getNota2() +
+                " | Média da disciplina: " + matricula.getMediaDisciplina() +
+                " | Frequência da disciplina: " + matricula.getPercentualFrequencia() +
+                " | Status da disciplina: " + matricula.getStatus()
+            );
+            System.out.println();
+        }
     }
 }
 
