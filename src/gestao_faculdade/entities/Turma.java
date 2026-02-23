@@ -27,6 +27,10 @@ public class Turma {
         return codigo;
     }
 
+    public Integer getLimiteDeVagas() {
+        return limiteDeVagas;
+    }
+
     public Set<Matricula> getMatriculas() {
         return matriculas;
     }

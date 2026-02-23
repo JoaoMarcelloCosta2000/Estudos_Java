@@ -1,7 +1,5 @@
 package gestao_faculdade.entities;
 
-import java.util.Objects;
-
 import gestao_faculdade.enums.StatusMatricula;
 
 public class Matricula {
