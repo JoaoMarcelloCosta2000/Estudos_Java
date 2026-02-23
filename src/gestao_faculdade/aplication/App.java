@@ -1,6 +1,7 @@
 package gestao_faculdade.aplication;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -84,6 +85,10 @@ public class App {
                     exibirBoletimAluno(sc);
                     break;
 
+                case 10:
+                    exibirRankingTurma(sc);
+                    break;
+
                 default:
                     System.out.println("Opção inválida! Digite uma opção válida!");
             }
@@ -105,7 +110,9 @@ public class App {
     public static void cadastraAluno(Scanner sc) {
 
         while(true){
-            System.out.print("Bem vindo ao cadastro de alunos!");
+            System.out.println("===================================");
+            System.out.println("   SISTEMA DE CADASTRO DE ALUNOS"   );
+            System.out.println("===================================");
             System.out.println();
 
             System.out.print("Digite o nome do aluno a ser cadastrado: ");
@@ -123,7 +130,7 @@ public class App {
             sc.nextLine();
             System.out.println();
 
-            System.out.println("Dados do aluno cadastrado:");
+            System.out.println("===== DADOS DO ALUNO CADASTRADO =====");
             System.out.println("Nome: " +nome);
             System.out.println("ID: " +id);
             System.out.println("E-mail: " +email);
@@ -138,7 +145,7 @@ public class App {
             if(resposta == 1){
                 Aluno aluno = new Aluno(id, nome, email, matricula);
                 alunos.put(matricula, aluno);
-                System.out.print("Aluno cadastrado com sucesso! ");
+                System.out.print("Aluno " + nome + "cadastrado com sucesso! ");
                 break;
             }              
         }
@@ -148,7 +155,9 @@ public class App {
 
         while(true){
 
-            System.out.print("Bem vindo ao cadastro de professores!");
+            System.out.println("========================================");
+            System.out.println("   SISTEMA DE CADASTRO DE PROFESSORES"   );
+            System.out.println("========================================");
             System.out.println();
 
             System.out.print("Digite o nome do professor a ser cadastrado: ");
@@ -166,7 +175,7 @@ public class App {
             sc.nextLine();
             System.out.println();
 
-            System.out.println("Dados do professor cadastrado:");
+            System.out.println("===== DADOS DO PROFESSOR CADASTRADO =====");
             System.out.println("Nome: " +nome);
             System.out.println("ID: " +id);
             System.out.println("E-mail: " +email);
@@ -181,7 +190,7 @@ public class App {
             if(resposta == 1){
                 Professor professor = new Professor(id, nome, email, valorSalario);
                 professores.put(id, professor);
-                System.out.print("Professor cadastrado com sucesso! ");
+                System.out.print("Professor " + nome + "cadastrado com sucesso! ");
                 break;
             }
         }
@@ -190,7 +199,9 @@ public class App {
     public static Disciplina cadastraDisciplina(Scanner sc) {
 
         while(true){
-            System.out.print("Bem vindo ao cadastro de disciplinas!");
+            System.out.println("========================================");
+            System.out.println("   SISTEMA DE CADASTRO DE DISCIPLINAS"   );
+            System.out.println("========================================");
             System.out.println();
 
             System.out.print("Digite o nome da disciplina: ");
@@ -209,7 +220,7 @@ public class App {
             sc.nextLine();
             System.out.println();
 
-            System.out.println("Dados da disciplina cadastrada:");
+            System.out.println("===== DADOS DA DISCIPLINA CADASTRADA =====");
             System.out.println("Nome: " +nome);
             System.out.println("Código: " +codigo);
             System.out.println("Carga horária: " +cargaHoraria);
@@ -232,7 +243,9 @@ public class App {
 
     public static void cadastraRequisitosDisciplina(Scanner sc) {
 
-        System.out.print("Bem vindo ao cadastro de requisitos de disciplinas!");
+        System.out.println("======================================================");
+        System.out.println("   SISTEMA DE CADASTRO DE REQUISITOS DE DISCIPLINAS"   );
+        System.out.println("======================================================");
         System.out.println();
 
         System.out.print("Digite o código da disciplina que possui requisitos: ");
@@ -300,7 +313,9 @@ public class App {
     public static void cadastraTurma(Scanner sc){
 
         while(true){
-            System.out.print("Bem vindo ao cadastro de turmas!");
+            System.out.println("=================================================");
+            System.out.println("   SISTEMA DE CADASTRO DE REQUISITOS DE TURMAS"   );
+            System.out.println("=================================================");
             System.out.println();
 
             System.out.print("Digite o código da turma a ser cadastrada: ");
@@ -340,7 +355,7 @@ public class App {
             sc.nextLine();
             System.out.println();
 
-            System.out.println("Dados da turma cadastrada:");
+            System.out.println("===== DADOS DA TURMA CADASTRADA =====");
             System.out.println("Código da turma: " +codigo);
             System.out.println("Disciplina associada: " +disciplinaSelecionada.getNome());
             System.out.println("Professor: " +professorEncontrado.getNome());
@@ -365,7 +380,9 @@ public class App {
     public static void matriculaAluno(Scanner sc){
 
         while (true){
-            System.out.print("Bem vindo ao sistema de matrículas de alunos!");
+            System.out.println("================================================");
+            System.out.println("   SISTEMA DE CADASTRO DE MATRÍCULA DE ALUNOS"   );
+            System.out.println("================================================");
             System.out.println();
 
             Aluno alunoEncontrado = null;
@@ -409,7 +426,7 @@ public class App {
             }
 
             System.out.println();
-            System.out.println("Dados da matrícula cadastrada:");
+            System.out.println("===== DADOS DA MATRÍCULA CADASTRADA =====");
             System.out.println("Nome: " +alunoEncontrado.getNome());
             System.out.println("Código da turma: " +turmaEncontrada.getCodigo());
             System.out.println();
@@ -430,7 +447,9 @@ public class App {
     public static void lancaNota(Scanner sc){
 
         while(true){
-            System.out.println("Bem vindo ao sistema de lançamento de notas!");
+            System.out.println("=================================================");
+            System.out.println("   BEM VINDO AO SISTEMA DE LANÇAMENTO DE NOTAS"   );
+            System.out.println("=================================================");
 
             System.out.print("Informe o ID do professor: ");
             Integer idProfessor = sc.nextInt();
@@ -539,6 +558,8 @@ public class App {
                     break;
             }
 
+            System.out.println();
+            System.out.println("===== DADOS DA INSERÇÃO DE NOTA =====");
             System.out.println("Nome do aluno: " +aluno.getNome());
             System.out.println("Código da turma: "+matriculaEncontrada.getTurma().getCodigo()); 
             System.out.println("Notas inseridas: "); 
@@ -566,7 +587,10 @@ public class App {
 
     public static void registrarFrequencia(Scanner sc){
 
-        System.out.println("Bem vindo ao sistema de lançamento de frequeências!");
+        System.out.println("=======================================================");
+        System.out.println("   BEM VINDO AO SISTEMA DE LANÇAMENTO DE FREQUÊNCIAS"   );
+        System.out.println("=======================================================");
+        System.out.println();
 
         System.out.print("Informe o ID do professor: ");
         Integer idProfessor = sc.nextInt();
@@ -646,7 +670,9 @@ public class App {
 
     public static void exibirBoletimAluno(Scanner sc){
 
-        System.out.println("Bem vindo ao sistema de exibição de boletim!");
+        System.out.println("==============================================");
+        System.out.println("   SISTEMA DE EMISSÃO DE BOLETIM INDIVIDUAL"   );
+        System.out.println("==============================================");
         System.out.println();
 
         System.out.print("Informe a matrícula do aluno: ");
@@ -660,7 +686,7 @@ public class App {
             return;
         }
 
-        System.out.println("Boletim do aluno "+alunoAchado.getNome()+" !");
+        System.out.println("===== NOTAS DO ALUNO "+ alunoAchado.getNome()+" ! =====");
 
         for (Matricula matricula : alunoAchado.getMatriculas()) {
             System.out.println(
@@ -675,6 +701,43 @@ public class App {
             );
             System.out.println();
         }
+    }
+
+    public static void exibirRankingTurma(Scanner sc){
+
+        System.out.println("===========================================");
+        System.out.println("   SISTEMA DE EMISSÃO DE BOLETIM DA TURMA"  );
+        System.out.println("===========================================");
+        System.out.println();
+
+
+        System.out.print("Informe o código da turma a ser exibida: ");
+        Integer codigoTurma = sc.nextInt();
+        sc.nextLine();
+
+        Turma turmaAchada = turmas.get(codigoTurma);
+
+        if(turmaAchada == null){
+            System.out.println("Turma não encontrada!");
+            return;
+        }
+
+        System.out.println();
+        System.out.println("===== NOTAS DA TURMA " + turmaAchada.getCodigo() + " =====");
+        System.out.println();
+
+        turmaAchada.getMatriculas().stream().sorted(
+        Comparator.comparing(
+        Matricula::getMediaDisciplina,
+        Comparator.nullsLast(Comparator.reverseOrder())))
+
+        .forEach(matricula -> {System.out.println(
+                "Nome do Aluno: " + matricula.getAluno().getNome() +
+                " | Média da disciplina: " + matricula.getMediaDisciplina() +
+                " | Frequência da disciplina: " + matricula.getPercentualFrequencia() +
+                " | Status da disciplina: " + matricula.getStatus()
+            );
+            System.out.println();});
     }
 }
 
