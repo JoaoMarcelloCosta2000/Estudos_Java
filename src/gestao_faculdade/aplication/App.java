@@ -10,7 +10,6 @@ import gestao_faculdade.entities.Disciplina;
 import gestao_faculdade.entities.Matricula;
 import gestao_faculdade.entities.Professor;
 import gestao_faculdade.entities.Turma;
-import gestao_faculdade.enums.StatusMatricula;
 
 public class App {
     
@@ -421,7 +420,7 @@ public class App {
             System.out.println();
 
             if(resposta == 1){
-                new Matricula(alunoEncontrado, turmaEncontrada, StatusMatricula.CURSANDO);
+                new Matricula(alunoEncontrado, turmaEncontrada);
                 System.out.print("Matrícula do aluno " + alunoEncontrado.getNome() + " na turma de código " + turmaEncontrada.getCodigo() + " realizada com sucesso! ");
                 break;
             }    
@@ -501,7 +500,7 @@ public class App {
                         return;
                     }
 
-                    matriculaEncontrada.setNota1(n1);
+                    matriculaEncontrada.lançarNota1(n1);
 
                     break;
 
@@ -514,7 +513,7 @@ public class App {
                         return;
                     }
 
-                    matriculaEncontrada.setNota2(n2);
+                    matriculaEncontrada.lançarNota2(n2);
                     break;
 
                 case 3:
@@ -526,7 +525,7 @@ public class App {
                         return;
                     }
 
-                    matriculaEncontrada.setNota1(n1);
+                    matriculaEncontrada.lançarNota1(n1);
 
                     System.out.print("Nota P2: ");
                     n2 = sc.nextFloat();
@@ -536,7 +535,7 @@ public class App {
                         return;
                     }
 
-                    matriculaEncontrada.setNota2(n2);
+                    matriculaEncontrada.lançarNota2(n2);
                     break;
             }
 
@@ -559,7 +558,7 @@ public class App {
 
             if(resposta == 1){ 
                 System.out.println("Notas lançadas com sucesso para o aluno " +aluno.getNome());
-                matriculaEncontrada.setMediaDisciplina(n1, n2);
+                matriculaEncontrada.atualizarMediaEStatusSePossivel();
                 break;
             }
         }
@@ -648,6 +647,7 @@ public class App {
     public static void exibirBoletimAluno(Scanner sc){
 
         System.out.println("Bem vindo ao sistema de exibição de boletim!");
+        System.out.println();
 
         System.out.print("Informe a matrícula do aluno: ");
         Integer matriculaInformada = sc.nextInt();

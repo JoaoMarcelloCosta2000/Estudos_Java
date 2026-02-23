@@ -1,86 +1,87 @@
 package gestao_faculdade.entities;
 
 import gestao_faculdade.enums.StatusMatricula;
+import java.util.Objects;
 
 public class Matricula {
-    
-    private Aluno aluno;
-    private Turma turma;
+
+    private final Aluno aluno;
+    private final Turma turma;
+
     private Float nota1;
     private Float nota2;
-    private Integer totalAulas = 0;
-    private Integer totalPresencas = 0;
+
+    private int totalAulas;
+    private int totalPresencas;
+
     private Float mediaDisciplina;
     private StatusMatricula status;
 
-    public Matricula(Aluno aluno, Turma turma, StatusMatricula status) {
+    public Matricula(Aluno aluno, Turma turma) {
         this.aluno = aluno;
         this.turma = turma;
-        this.status = status;
+        this.status = StatusMatricula.CURSANDO;
 
         aluno.adicionarMatricula(this);
         turma.adicionarMatricula(this);
+         
     }
 
-    public Aluno getAluno() {
-        return aluno;
-    }
+    /* ===================== Controle de presença ===================== */
 
-    public void registrarPresenca(boolean presente){
+    public void registrarPresenca(boolean presente) {
         totalAulas++;
-
-        if(presente){
-                totalPresencas++;
-            }
+        if (presente) {
+            totalPresencas++;
+        }
     }
 
-    public float getPercentualFrequencia(){
-        if(totalAulas == 0) return 0f;
-
+    public float getPercentualFrequencia() {
+        if (totalAulas == 0) return 0f;
         return (totalPresencas * 100f) / totalAulas;
     }
 
-    public Float getMediaDisciplina() {
-        return mediaDisciplina;
+    /* ===================== Controle de notas ===================== */
+
+    public void lançarNota1(Float nota1) {
+        this.nota1 = nota1;
+        atualizarMediaEStatusSePossivel();
     }
 
-    public void setMediaDisciplina(Float nota1, Float nota2) {
-        this.mediaDisciplina = (nota1 + nota2) /2;
+    public void lançarNota2(Float nota2) {
+        this.nota2 = nota2;
+        atualizarMediaEStatusSePossivel();
     }
 
-    public StatusMatricula getStatus() {
-        return status;
+    public void atualizarMediaEStatusSePossivel() {
+        if (nota1 != null && nota2 != null) {
+            this.mediaDisciplina = (nota1 + nota2) / 2;
+            atualizarStatus();
+        }
     }
 
-    public void setStatus(StatusMatricula status) {
+    /* ===================== Controle de status ===================== */
+
+    private void atualizarStatus() {
 
         if (mediaDisciplina == null) return;
 
-        if(mediaDisciplina > 6.0){
+        if (getPercentualFrequencia() < 70) {
+            this.status = StatusMatricula.REPROVADO_FREQUENCIA;
+            return;
+        } 
+        else if (mediaDisciplina >= 6.0) {
             this.status = StatusMatricula.APROVADO;
-        }else{
+        } 
+        else {
             this.status = StatusMatricula.REPROVADO_NOTA;
         }
-        if(getPercentualFrequencia() < 70){
-            this.status = StatusMatricula.REPROVADO_FREQUENCIA;
-        }
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((aluno == null) ? 0 : aluno.hashCode());
-        result = prime * result + ((turma == null) ? 0 : turma.hashCode());
-        return result;
-    }
+    /* ===================== Getters ===================== */
 
-    public void setNota1(Float nota1) {
-        this.nota1 = nota1;
-    }
-
-    public void setNota2(Float nota2) {
-        this.nota2 = nota2;
+    public Aluno getAluno() {
+        return aluno;
     }
 
     public Turma getTurma() {
@@ -95,26 +96,27 @@ public class Matricula {
         return nota2;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Matricula other = (Matricula) obj;
-        if (aluno == null) {
-            if (other.aluno != null)
-                return false;
-        } else if (!aluno.equals(other.aluno))
-            return false;
-        if (turma == null) {
-            if (other.turma != null)
-                return false;
-        } else if (!turma.equals(other.turma))
-            return false;
-        return true;
+    public Float getMediaDisciplina() {
+        return mediaDisciplina;
     }
 
+    public StatusMatricula getStatus() {
+        return status;
+    }
+
+    /* ===================== Equals e Hashcode ===================== */
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(aluno, turma);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Matricula)) return false;
+        Matricula other = (Matricula) obj;
+        return Objects.equals(aluno, other.aluno)
+                && Objects.equals(turma, other.turma);
+    }
 }
