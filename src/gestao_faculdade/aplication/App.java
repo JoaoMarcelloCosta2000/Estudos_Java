@@ -11,6 +11,7 @@ import gestao_faculdade.entities.Disciplina;
 import gestao_faculdade.entities.Matricula;
 import gestao_faculdade.entities.Professor;
 import gestao_faculdade.entities.Turma;
+import gestao_faculdade.enums.StatusMatricula;
 
 public class App {
     
@@ -26,8 +27,10 @@ public class App {
         Integer respostaContinuacao = 0;
 
         while (respostaContinuacao == 0) {
-            System.out.println("Olá, bem vindo ao sistema de gestão da faculdade!");
-            System.err.println();
+            System.out.println("=================================================");
+            System.out.println("   BEM VINDO AO SISTEMA DE GESTÃO DA FACULDADE"   );
+            System.out.println("=================================================");
+            System.out.println();
             System.out.println("Cadastrar aluno [1]");
             System.out.println("Cadastrar professor [2]");
             System.out.println("Cadastrar disciplina [3]");
@@ -39,9 +42,8 @@ public class App {
             System.out.println("Exibir boletim de aluno [9]");
             System.out.println("Exibir ranking da turma [10]");
             System.out.println("Gerar relatório CSV [11]");
-            System.out.println("Ler relatório CSV [12]");
-            System.out.println("Estatístiscas gerais [13]");
-            System.out.println("Sair [14]");
+            System.out.println("Estatístiscas gerais [12]");
+            System.out.println("Sair [13]");
             System.err.println();
             System.out.print("Selecione a função desejada! ");
             Integer respostaMenu = sc.nextInt();
@@ -89,6 +91,14 @@ public class App {
                     exibirRankingTurma(sc);
                     break;
 
+                case 11:
+                    geraRelatorio(sc);
+                    break;    
+
+                case 12:
+                    mostrarEstatisticas();
+                    break;
+
                 default:
                     System.out.println("Opção inválida! Digite uma opção válida!");
             }
@@ -125,16 +135,16 @@ public class App {
             System.out.print("Digite o e-mail do aluno a ser cadastrado: ");
             String email = sc.nextLine();
 
-            System.out.print("Digite o número da matrícula do aluno a ser cadastrado: ");
-            Integer matricula = sc.nextInt();
+            System.out.print("Digite o número do registro do aluno a ser cadastrado: ");
+            Integer registro = sc.nextInt();
             sc.nextLine();
             System.out.println();
 
             System.out.println("===== DADOS DO ALUNO CADASTRADO =====");
-            System.out.println("Nome: " +nome);
-            System.out.println("ID: " +id);
-            System.out.println("E-mail: " +email);
-            System.out.println("Matrícula: " +matricula);
+            System.out.println("Nome: " + nome);
+            System.out.println("ID: " + id);
+            System.out.println("E-mail: " + email);
+            System.out.println("Registro: " + registro);
             System.out.println();
 
             System.out.print("Deseja recomeçar o cadastro? [1] Não | [0] Sim: ");
@@ -143,9 +153,9 @@ public class App {
             System.out.println();
 
             if(resposta == 1){
-                Aluno aluno = new Aluno(id, nome, email, matricula);
-                alunos.put(matricula, aluno);
-                System.out.print("Aluno " + nome + "cadastrado com sucesso! ");
+                Aluno aluno = new Aluno(id, nome, email, registro);
+                alunos.put(registro, aluno);
+                System.out.print("Aluno " + nome + " cadastrado com sucesso! ");
                 break;
             }              
         }
@@ -190,7 +200,7 @@ public class App {
             if(resposta == 1){
                 Professor professor = new Professor(id, nome, email, valorSalario);
                 professores.put(id, professor);
-                System.out.print("Professor " + nome + "cadastrado com sucesso! ");
+                System.out.print("Professor " + nome + " cadastrado com sucesso! ");
                 break;
             }
         }
@@ -370,7 +380,7 @@ public class App {
             if(resposta == 1){
                 Turma turma = new Turma(codigo, disciplinaSelecionada, professorEncontrado, limiteDeVagas);
                 turmas.put(codigo, turma);
-                professorEncontrado.insereTurma(codigo, turma);
+                professorEncontrado.inserirTurma(codigo, turma);
                 System.out.print("Turma cadastrada com sucesso!");
                 break;
             }
@@ -388,14 +398,14 @@ public class App {
             Aluno alunoEncontrado = null;
 
             while (alunoEncontrado == null) {
-                System.out.print("Digite a matrícula do aluno desejado: ");
-                Integer matricula = sc.nextInt();
+                System.out.print("Digite o registro do aluno desejado: ");
+                Integer registro = sc.nextInt();
                 sc.nextLine();
 
-                alunoEncontrado = alunos.get(matricula);
+                alunoEncontrado = alunos.get(registro);
 
                 if (alunoEncontrado == null) {
-                    System.out.println("Matrícula não encontrada! Digite uma matrícula válida.");
+                    System.out.println("Registro não encontrada! Digite um registro válida.");
                 }
             }
 
@@ -411,11 +421,6 @@ public class App {
                 if (turmaEncontrada == null) {
                     System.out.println("Turma não encontrada! Digite um código válido.");
                 }
-            }
-
-            if(turmaEncontrada.getMatriculas().size() >= turmaEncontrada.getLimiteDeVagas()){
-                System.out.println("A turma está lotada!");
-                return;
             }
 
             for(Matricula matricula : alunoEncontrado.getMatriculas()){
@@ -438,7 +443,7 @@ public class App {
 
             if(resposta == 1){
                 new Matricula(alunoEncontrado, turmaEncontrada);
-                System.out.print("Matrícula do aluno " + alunoEncontrado.getNome() + " na turma de código " + turmaEncontrada.getCodigo() + " realizada com sucesso! ");
+                System.out.print("Registro do aluno " + alunoEncontrado.getNome() + " na turma de código " + turmaEncontrada.getCodigo() + " realizada com sucesso! ");
                 break;
             }    
         }
@@ -462,11 +467,11 @@ public class App {
                 return;
             }
 
-            System.out.print("Digite a matrícula do aluno: ");
-            Integer numeroMatricula = sc.nextInt();
+            System.out.print("Digite o registro do aluno: ");
+            Integer numeroRegistro = sc.nextInt();
             sc.nextLine();
 
-            Aluno aluno = alunos.get(numeroMatricula);
+            Aluno aluno = alunos.get(numeroRegistro);
 
             if(aluno == null){
                 System.out.println("Aluno não encontrado!");
@@ -675,14 +680,14 @@ public class App {
         System.out.println("==============================================");
         System.out.println();
 
-        System.out.print("Informe a matrícula do aluno: ");
+        System.out.print("Informe o registro do aluno: ");
         Integer matriculaInformada = sc.nextInt();
         sc.nextLine();
 
         Aluno alunoAchado = alunos.get(matriculaInformada);
 
         if(alunoAchado == null){
-            System.out.println("Matrícula não encontrada.");
+            System.out.println("Registro não encontrada.");
             return;
         }
 
@@ -738,6 +743,116 @@ public class App {
                 " | Status da disciplina: " + matricula.getStatus()
             );
             System.out.println();});
+    }
+
+    public static void geraRelatorio(Scanner sc){
+        System.out.println("======================================");
+        System.out.println("   SISTEMA DE EMISSÃO DE RELATÓRIOS"   );
+        System.out.println("======================================");
+        System.out.println();
+    }
+
+    public static void mostrarEstatisticas(){
+
+        System.out.println("======================================");
+        System.out.println("   ESTATÍSTICAS GERAIS DA FACULDADE   ");
+        System.out.println("======================================");
+        System.out.println();
+
+        int numeroMatriculas = 0; 
+        int contadorReprovadosNota = 0;
+        int contadorReprovadosFrequencia = 0;
+        int numeroAprovados = 0;
+        int alunosEmRisco = 0;
+
+        double notaTotal = 0.0;
+        double somaFrequencia = 0.0;
+        double maiorMedia = 0.0;
+        
+        String nomeMelhorAluno = "";
+
+        for(Aluno aluno : alunos.values()){ 
+
+            double somaNotasAluno = 0.0;
+            int totalMatriculasAluno = 0;
+            boolean alunoEmRisco = false;
+
+            for(Matricula matricula : aluno.getMatriculas()){
+
+                notaTotal += matricula.getMediaDisciplina();
+                numeroMatriculas++;
+                somaFrequencia += matricula.getPercentualFrequencia();
+
+                somaNotasAluno += matricula.getMediaDisciplina();
+                totalMatriculasAluno++;
+
+                if(matricula.getPercentualFrequencia() < 70){
+                    alunoEmRisco = true;
+                }
+
+                if(matricula.getStatus() == StatusMatricula.APROVADO){
+                    numeroAprovados++;
+                }else if (matricula.getStatus() == StatusMatricula.REPROVADO_NOTA){
+                    contadorReprovadosNota++;
+                }else if(matricula.getStatus() == StatusMatricula.REPROVADO_FREQUENCIA){
+                    contadorReprovadosFrequencia++;
+                }
+            }
+
+            if(totalMatriculasAluno > 0){
+                double mediaAluno = somaNotasAluno / totalMatriculasAluno;
+
+                if(mediaAluno > maiorMedia){
+                    maiorMedia = mediaAluno;
+                    nomeMelhorAluno = aluno.getNome();
+                }
+            }
+
+            if(alunoEmRisco){
+                alunosEmRisco++;
+            }
+        }
+
+        double mediaGeral = 0.0;
+        double percentualAprovados = 0.0;
+        double mediaFrequencia = 0.0;
+        double percentualReprovacao = 0.0;
+        double mediaMatriculasPorAluno = 0.0;
+
+        if (numeroMatriculas > 0) {
+            mediaGeral = notaTotal / numeroMatriculas;
+            percentualAprovados = numeroAprovados * 100.0 / numeroMatriculas;
+            mediaFrequencia = somaFrequencia / numeroMatriculas;
+            percentualReprovacao = (contadorReprovadosNota + contadorReprovadosFrequencia) * 100.0 / numeroMatriculas;
+        }
+
+        if(alunos.size() > 0){
+            mediaMatriculasPorAluno = numeroMatriculas * 1.0 / alunos.size();
+        }
+
+        System.out.println("Total de alunos: " + alunos.size());
+        System.out.println("Total de turmas: " + turmas.size());
+        System.out.println("Total de matrículas: " + numeroMatriculas);
+        System.out.println();
+
+        System.out.printf("Média geral institucional: %.2f\n", mediaGeral);
+        System.out.printf("Percentual geral de aprovação: %.2f%%\n", percentualAprovados);
+        System.out.printf("Percentual geral de reprovação: %.2f%%\n", percentualReprovacao);
+        System.out.println();
+
+        System.out.println("Total aprovados: " + numeroAprovados);
+        System.out.println("Total reprovados por nota: " + contadorReprovadosNota);
+        System.out.println("Total reprovados por frequência: " + contadorReprovadosFrequencia);
+        System.out.println();
+
+        System.out.printf("Média de frequência da faculdade: %.2f%%\n", mediaFrequencia);
+        System.out.printf("Média de matrículas por aluno: %.2f\n", mediaMatriculasPorAluno);
+        System.out.println();
+
+        if(!nomeMelhorAluno.isEmpty()){
+            System.out.printf("Melhor aluno da faculdade: %s (Média %.2f)\n", nomeMelhorAluno, maiorMedia);
+        }
+        System.out.println("Alunos em risco por frequência (<75%): " + alunosEmRisco);
     }
 }
 

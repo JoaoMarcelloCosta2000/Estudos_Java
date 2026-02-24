@@ -1,15 +1,20 @@
 package gestao_faculdade.entities;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Turma {
-    
+
     private Integer codigo;
-    private Disciplina disciplina;
-    private Professor professor;
-    private Set<Matricula> matriculas = new HashSet<>();
     private Integer limiteDeVagas;
+
+    private Disciplina disciplina;
+
+    private Professor professor;
+    
+    private Set<Matricula> matriculas = new HashSet<>();
 
     public Turma(Integer codigo, Disciplina disciplina, Professor professor, Integer limiteDeVagas) {
         this.codigo = codigo;
@@ -18,13 +23,18 @@ public class Turma {
         this.limiteDeVagas = limiteDeVagas;
     }
 
-    public boolean alunoJaMatriculado(Aluno aluno) {
-        return matriculas.stream()
-                .anyMatch(m -> m.getAluno().equals(aluno));
-    }
+    // ================== Getters ==================
 
     public Integer getCodigo() {
         return codigo;
+    }
+
+    public Disciplina getDisciplina() {
+        return disciplina;
+    }
+
+    public Professor getProfessor() {
+        return professor;
     }
 
     public Integer getLimiteDeVagas() {
@@ -32,14 +42,28 @@ public class Turma {
     }
 
     public Set<Matricula> getMatriculas() {
-        return matriculas;
+        return Collections.unmodifiableSet(matriculas);
     }
 
-    public Disciplina getDisciplina() {
-        return disciplina;
+    // ================== Regras de negócio ==================
+
+    public boolean alunoJaMatriculado(Aluno aluno) {
+
+        for (Matricula matricula : matriculas) {
+            if (matricula.getAluno().equals(aluno)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void adicionarMatricula(Matricula matricula) {
+
+        if (matricula == null) {
+            throw new IllegalArgumentException("Matrícula inválida");
+        }
+
         if (matriculas.size() >= limiteDeVagas) {
             throw new IllegalStateException("Turma lotada!");
         }
@@ -51,8 +75,19 @@ public class Turma {
         matriculas.add(matricula);
     }
 
-    public Professor getProfessor() {
-        return professor;
+    // ================== Equal hashcode ==================
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Turma)) return false;
+
+        Turma other = (Turma) obj;
+        return Objects.equals(this.codigo, other.codigo);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigo);
+    }
 }

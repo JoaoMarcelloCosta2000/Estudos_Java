@@ -1,14 +1,20 @@
 package gestao_faculdade.entities;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
-public class Disciplina implements Comparable <Disciplina> {
-    
+public class Disciplina implements Comparable<Disciplina> {
+
+
     private Integer codigo;
-    private String nome;
     private Integer cargaHoraria;
     private Integer creditos;
-    private HashSet<Disciplina> preRequisitos = new HashSet<>();
+
+    private String nome;
+    
+    private Set<Disciplina> preRequisitos = new HashSet<>();
 
     public Disciplina(Integer codigo, String nome, Integer cargaHoraria, Integer creditos) {
         this.codigo = codigo;
@@ -17,26 +23,60 @@ public class Disciplina implements Comparable <Disciplina> {
         this.creditos = creditos;
     }
 
+    // ================== Getters ==================
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
     public String getNome() {
         return nome;
     }
 
-    public HashSet<Disciplina> getPreRequisitos() {
-        return preRequisitos;
+    public Integer getCargaHoraria() {
+        return cargaHoraria;
     }
 
-    public void setPreRequisitos(HashSet<Disciplina> preRequisitos) {
-        this.preRequisitos = preRequisitos;
+    public Integer getCreditos() {
+        return creditos;
     }
+
+    public Set<Disciplina> getPreRequisitos() {
+        return Collections.unmodifiableSet(preRequisitos);
+    }
+
+    // ================== Regras de negócio ==================
 
     public void adicionarPreRequisito(Disciplina disciplina) {
-        this.preRequisitos.add(disciplina);
+        if (disciplina == null) {
+            throw new IllegalArgumentException("Pré-requisito inválido");
+        }
+        preRequisitos.add(disciplina);
     }
 
-    public Integer getCodigo (){
-        return codigo;
+    public boolean possuiPreRequisito(Disciplina disciplina) {
+        return preRequisitos.contains(disciplina);
     }
 
+    // ================== Equals e hashcode ==================
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigo);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof Disciplina))
+            return false;
+        Disciplina other = (Disciplina) obj;
+        return Objects.equals(codigo, other.codigo);
+    }
+
+    // ================== COMPARABLE ==================
+    
     @Override
     public int compareTo(Disciplina outra) {
         return this.codigo.compareTo(outra.codigo);
