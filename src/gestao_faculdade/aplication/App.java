@@ -99,6 +99,9 @@ public class App {
                     mostrarEstatisticas();
                     break;
 
+                case 13:
+                    break;    
+
                 default:
                     System.out.println("Opção inválida! Digite uma opção válida!");
             }
